@@ -1,12 +1,21 @@
+import {Text} from '../../../../../../UI/Text/Text';
 import style from './PostContentTitle.module.css';
 import PropTypes from 'prop-types';
 
 export const PostContentTitle = ({title}) => (
-  <h2 className={style.title}>
-    <a className={style.linkPost} href="#post">
+  <Text As="h2" className={style.title}>
+    <Text
+      As="a"
+      size={18}
+      tsize={24}
+      dsize={32}
+      fontWeight="bold"
+      className={style.linkPost}
+      href="#post"
+    >
       {title}
-    </a>
-  </h2>
+    </Text>
+  </Text>
 );
 
 PostContentTitle.propTypes = {
