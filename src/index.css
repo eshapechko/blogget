@@ -1,6 +1,7 @@
 @import '~normalize.css';
 
 @font-face {
+  font-display: swap;
   font-family: 'Merriweather Sans';
   font-style: normal;
   font-weight: 400;
@@ -13,6 +14,7 @@
 }
 
 @font-face {
+  font-display: swap;
   font-family: 'Merriweather Sans';
   font-style: normal;
   font-weight: 500;
@@ -25,6 +27,7 @@
 }
 
 @font-face {
+  font-display: swap;
   font-family: 'Merriweather Sans';
   font-style: normal;
   font-weight: 700;

@@ -1,13 +1,16 @@
 import PropTypes from 'prop-types';
-import Icons from './sprite.svg';
 
-export const Svg = ({name, className}) => (
-  <svg className={className}>
-    <use href={`${Icons}#icon-${name}`}></use>
-  </svg>
-);
+export const Svg = prop => {
+  const {path, className, id} = prop;
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" className={className}>
+      <use xlinkHref={`${path}#${id}`}></use>
+    </svg>
+  );
+};
 
 Svg.propTypes = {
+  path: PropTypes.string,
+  id: PropTypes.string,
   className: PropTypes.string,
-  name: PropTypes.string,
 };
