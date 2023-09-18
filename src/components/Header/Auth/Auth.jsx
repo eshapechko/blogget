@@ -4,16 +4,17 @@ import LoginIconPath from './img/login.svg';
 import {Text} from '../../../UI/Text/Text';
 import {urlAuth} from '../../../api/auth';
 import {useState} from 'react';
-import {URL_API} from '../../../api/const';
 import {Svg} from '../../../UI/SVG/Svg';
 import {useAuth} from '../../../hooks/useAuth';
 
-export const Auth = ({token, delToken}) => {
+export const Auth = ({delToken}) => {
   const [buttonLogout, setButtonLogout] = useState(false);
-  const [auth] = useAuth(URL_API, token, delToken, {});
+
+  const [auth, clearAuth] = useAuth();
 
   const deleteToken = () => {
     delToken();
+    clearAuth();
   };
 
   const handleClick = () => {

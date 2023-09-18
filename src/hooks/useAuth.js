@@ -1,7 +1,10 @@
 import {useEffect, useState} from 'react';
+import {URL_API} from '../api/const';
+import {useToken} from './useToken';
 
-export const useAuth = (URL_API, token, delToken, state) => {
-  const [auth, setAuth] = useState(state);
+export const useAuth = () => {
+  const [token, delToken] = useToken('');
+  const [auth, setAuth] = useState({});
 
   useEffect(() => {
     if (!token) return;
@@ -13,8 +16,7 @@ export const useAuth = (URL_API, token, delToken, state) => {
     })
       .then(response => {
         if (response.status === 401) {
-          delToken();
-          throw new Error('Ошибка запроса на авторизацию, связанная с токеном');
+          throw new Error(response.status);
         }
         return response.json();
       })
@@ -22,11 +24,15 @@ export const useAuth = (URL_API, token, delToken, state) => {
         const img = iconImg.replace(/\?.*$/, '');
         setAuth({name, img});
       })
-      .catch(err => {
-        console.log(err);
+      .catch(error => {
+        console.log('error: ', error);
+
+        delToken();
         setAuth({});
       });
   }, [token]);
 
-  return [auth];
+  const clearAuth = () => setAuth({});
+
+  return [auth, clearAuth];
 };
