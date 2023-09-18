@@ -25,7 +25,7 @@ export const useToken = state => {
   const delToken = () => {
     setToken('');
     localStorage.removeItem('bearer');
-    // return (location.href = 'http://localhost:3000');
+    return (location.href = 'http://localhost:3000');
   };
 
   return [token, delToken];

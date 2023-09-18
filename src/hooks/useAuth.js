@@ -25,7 +25,10 @@ export const useAuth = () => {
         setAuth({name, img});
       })
       .catch(error => {
-        console.log('error: ', error);
+        console.log(error);
+        if (error.toString().includes('401')) {
+          alert('Ошибка токена, получите новый токен');
+        }
 
         delToken();
         setAuth({});
