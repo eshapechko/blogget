@@ -7,18 +7,19 @@ import {PostContent} from './PostContent/PostContent';
 import {PostImage} from './PostImage/PostImage';
 import {PostDelete} from './PostDelete/PostDelete';
 
-export const Post = ({postData}) => {
-  const {title, author, ups, date} = postData;
+export const Post = ({bestPost}) => {
+  const {data} = bestPost;
+  const {title, author, ups, created, thumbnail} = data;
 
   return (
     <li className={style.post}>
-      <PostImage title={title} />
+      <PostImage title={title} thumbnail={thumbnail} />
 
       <PostContent title={title} author={author} />
 
       <PostRating ups={ups} />
 
-      <PostTime date={date} />
+      <PostTime created={created} />
 
       <PostDelete />
     </li>
@@ -26,5 +27,5 @@ export const Post = ({postData}) => {
 };
 
 Post.propTypes = {
-  postData: PropTypes.object,
+  bestPost: PropTypes.object,
 };

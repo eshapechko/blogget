@@ -1,13 +1,32 @@
 import style from './PostContent.module.css';
 import PropTypes from 'prop-types';
-import {PostContentAuthor} from './PostContentAuthor/PostContentAuthor';
-import {PostContentTitle} from './PostContentTitle/PostContentTitle';
+import {Text} from '../../../../../UI/Text/Text';
 
 export const PostContent = ({title, author}) => (
   <div className={style.content}>
-    <PostContentTitle title={title} />
+    <Text As="h2" className={style.title}>
+      <Text
+        As="a"
+        size={18}
+        tsize={26}
+        fontWeight="bold"
+        className={style.linkPost}
+        href="#post"
+      >
+        {title}
+      </Text>
+    </Text>
 
-    <PostContentAuthor author={author} />
+    <Text
+      As="a"
+      size={12}
+      tsize={14}
+      color={'orange'}
+      className={style.linkAuthor}
+      href="#author"
+    >
+      {author}
+    </Text>
   </div>
 );
 

@@ -145,11 +145,6 @@
 }
 
 @media (min-width: 1024px) {
-  .fsd32 {
-    font-size: 32px;
-    line-height: 36px;
-  }
-
   .fsd26 {
     font-size: 26px;
     line-height: 32px;

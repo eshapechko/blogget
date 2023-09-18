@@ -1,10 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {URL_API} from '../api/const';
-import {useToken} from './useToken';
+import {tokenContext} from '../context/tokenContext';
 
 export const useAuth = () => {
-  const [token, delToken] = useToken('');
   const [auth, setAuth] = useState({});
+  const {token, delToken} = useContext(tokenContext);
 
   useEffect(() => {
     if (!token) return;
@@ -30,8 +30,8 @@ export const useAuth = () => {
           alert('Ошибка токена, получите новый токен');
         }
 
-        delToken();
         setAuth({});
+        delToken();
       });
   }, [token]);
 
