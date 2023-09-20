@@ -7,7 +7,9 @@ export const useBestPost = () => {
   const [bestsPost, setBestPost] = useState([]);
 
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      setBestPost([]);
+    }
 
     fetch(`${URL_API}/best`, {
       headers: {
@@ -22,7 +24,6 @@ export const useBestPost = () => {
       })
       .then(data => setBestPost(data.data.children))
       .catch(error => {
-        console.log(error);
         if (error.toString().includes('400')) {
           alert('Ошибка сервера, зайдите позже');
         }
