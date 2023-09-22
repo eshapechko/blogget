@@ -9,13 +9,13 @@ import {PostDelete} from './PostDelete/PostDelete';
 
 export const Post = ({bestPost}) => {
   const {data} = bestPost;
-  const {title, author, ups, created, thumbnail} = data;
+  const {title, author, ups, created, thumbnail, id} = data;
 
   return (
     <li className={style.post}>
       <PostImage title={title} thumbnail={thumbnail} />
 
-      <PostContent title={title} author={author} />
+      <PostContent title={title} author={author} id={id} />
 
       <PostRating ups={ups} />
 
