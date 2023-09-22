@@ -14,7 +14,7 @@ export const Comments = ({comments}) => (
           <Text As="p" className={style.comment} size={14} tsize={18}>
             {item.body}
           </Text>
-          <PostTime created={Number(item.created)} />
+          {item.created ? <PostTime created={Number(item.created)} /> : ''}
         </li>
       ))
     ) : (
