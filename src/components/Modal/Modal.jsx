@@ -21,17 +21,23 @@ export const Modal = ({id, closeModal}) => {
   const handleClick = e => {
     const target = e.target;
 
-    if (target === overlayRef.current || e.key === 'Escape') {
+    if (target === overlayRef.current) {
+      closeModal();
+    }
+  };
+
+  const handleEscape = e => {
+    if (e.key === 'Escape') {
       closeModal();
     }
   };
 
   useEffect(() => {
     document.addEventListener('click', handleClick);
-    document.addEventListener('keydown', handleClick);
+    document.addEventListener('keydown', handleEscape);
     return () => {
       document.removeEventListener('click', handleClick);
-      document.removeEventListener('keydown', handleClick);
+      document.removeEventListener('keydown', handleEscape);
     };
   }, []);
 
