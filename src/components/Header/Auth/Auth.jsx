@@ -4,16 +4,18 @@ import {Text} from '../../../UI/Text/Text';
 import {urlAuth} from '../../../api/auth';
 import {useContext, useState} from 'react';
 import {Svg} from '../../../UI/SVG/Svg';
-import {tokenContext} from '../../../context/tokenContext';
 import {authContext} from '../../../context/authContext';
+import {useDispatch} from 'react-redux';
+import {deleteToken} from '../../../store';
 
 export const Auth = () => {
-  const {delToken} = useContext(tokenContext);
   const {auth, clearAuth} = useContext(authContext);
   const [buttonLogout, setButtonLogout] = useState(false);
 
-  const deleteToken = () => {
-    delToken();
+  const dispatch = useDispatch();
+
+  const deleteTok = () => {
+    dispatch(deleteToken());
     clearAuth();
   };
 
@@ -34,7 +36,7 @@ export const Auth = () => {
             />
           </button>
           {buttonLogout && (
-            <button className={style.logout} onClick={deleteToken}>
+            <button className={style.logout} onClick={deleteTok}>
               Выйти
             </button>
           )}

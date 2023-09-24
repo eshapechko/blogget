@@ -2,16 +2,21 @@ import {useContext, useRef, useState} from 'react';
 import {Text} from '../../../UI/Text/Text';
 import style from './FormComment.module.css';
 import {authContext} from '../../../context/authContext';
+import {useDispatch, useSelector} from 'react-redux';
+import {updateComment} from '../../../store';
 
 export const FormComment = () => {
+  const value = useSelector(state => state.comment);
+  const dispatch = useDispatch();
   const {auth} = useContext(authContext);
+
   const [viewForm, setViewForm] = useState(true);
   const textRef = useRef(null);
 
-  const handleClick = e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
-    console.log(textRef.current.value);
+    console.log(value);
   };
 
   const handleForm = () => {
@@ -19,6 +24,10 @@ export const FormComment = () => {
     setTimeout(() => {
       textRef.current.focus();
     }, 0);
+  };
+
+  const handleChange = e => {
+    dispatch(updateComment(e.target.value));
   };
 
   return (
@@ -32,8 +41,13 @@ export const FormComment = () => {
           <Text As="h3" size={14} tsize={18}>
             {auth.name}
           </Text>
-          <textarea className={style.textarea} ref={textRef}></textarea>
-          <button className={style.btn} onClick={handleClick}>
+          <textarea
+            className={style.textarea}
+            value={value}
+            onChange={handleChange}
+            ref={textRef}
+          ></textarea>
+          <button className={style.btn} onClick={handleSubmit}>
             Отправить
           </button>
         </form>
