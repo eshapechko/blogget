@@ -1,49 +1,17 @@
-import {useEffect, useState} from 'react';
-import {URL_API} from '../api/const';
-import {useSelector} from 'react-redux';
+import {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {commentRequestAsync} from '../store/comment/commentAction';
 
 export const useCommentsData = id => {
-  const token = useSelector(state => state.token);
-  const [commentsPost, setCommentsPost] = useState([]);
+  const token = useSelector(state => state.token.token);
+  const loading = useSelector(state => state.comment.loading);
+  const bestPost = useSelector(state => state.comment.comment);
+  const status = useSelector(state => state.comment.status);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!token) {
-      setCommentsPost([]);
-    }
-
-    fetch(`${URL_API}/comments/${id}`, {
-      headers: {
-        Authorization: `bearer ${token}`,
-      },
-    })
-      .then(response => {
-        if (response.status === 401) {
-          throw new Error(response.status);
-        }
-        return response.json();
-      })
-      .then(
-        ([
-          {
-            data: {
-              children: [{data: post}],
-            },
-          },
-          {
-            data: {children},
-          },
-        ]) => {
-          const comments = children.map(item => item.data);
-
-          setCommentsPost([post, comments]);
-        },
-      )
-      .catch(error => {
-        if (error.toString().includes('401')) {
-          alert('Ошибка авторизации, получите токен');
-        }
-      });
+    dispatch(commentRequestAsync(id));
   }, [token]);
 
-  return [commentsPost];
+  return [bestPost, status, loading];
 };

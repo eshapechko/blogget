@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import style from './Post.module.css';
-
 import {PostRating} from './PostRating/PostRating';
 import {PostTime} from './PostTime/PostTime';
 import {PostContent} from './PostContent/PostContent';

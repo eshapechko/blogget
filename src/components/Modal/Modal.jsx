@@ -8,9 +8,10 @@ import {useCommentsData} from '../../hooks/useCommentsData';
 import {Text} from '../../UI/Text/Text';
 import {Comments} from './Comments/Comments';
 import {FormComment} from './FormComment/FormComment';
+import {AuthLoader} from '../../UI/AuthLoader/AuthLoader';
 
 export const Modal = ({id, closeModal}) => {
-  const [commentsPost] = useCommentsData(id);
+  const [commentsPost, status] = useCommentsData(id);
 
   const [post, comments] = commentsPost;
   console.log('post: ', post);
@@ -42,17 +43,15 @@ export const Modal = ({id, closeModal}) => {
   }, []);
 
   return ReactDOM.createPortal(
-    <>
-      {!commentsPost.length ? (
-        <div className={style.overlay} ref={overlayRef}>
-          <div className={style.modal}>
-            <h2 className={style.title}>Loading</h2>
-          </div>
-        </div>
-      ) : (
-        <div className={style.overlay} ref={overlayRef}>
-          <div className={style.modal}>
-            <h2 className={style.title}>{post.title}</h2>
+    <div className={style.overlay} ref={overlayRef}>
+      <div className={style.modal}>
+        {status === 'loading' && <AuthLoader size={70} />}
+        {status === 'error' && 'Ошибка...'}
+        {status === 'loaded' && (
+          <>
+            <Text As="h2" className={style.title} size={22}>
+              {post.title}
+            </Text>
 
             <div className={style.content}>
               <Markdown
@@ -80,10 +79,11 @@ export const Modal = ({id, closeModal}) => {
             <button className={style.close} onClick={closeModal}>
               <CloseIcon />
             </button>
-          </div>
-        </div>
-      )}
-    </>,
+          </>
+        )}
+      </div>
+    </div>,
+
     document.getElementById('modal-root'),
   );
 };

@@ -1,17 +1,34 @@
-import {useContext} from 'react';
+import {useBestPost} from '../../../hooks/useBestPost';
 import style from './List.module.css';
 import Post from './Post';
-import {postsContext} from '../../../context/postsContext';
+import {PuffLoader} from 'react-spinners';
 
 export const List = () => {
-  const [bestsPost] = useContext(postsContext);
+  const [bestsPost, loading] = useBestPost();
   console.log('bestsPost: ', bestsPost);
 
   return (
-    <ul className={style.list}>
-      {bestsPost?.map(bestPost => (
-        <Post key={bestPost.data.id} bestPost={bestPost} />
-      ))}
-    </ul>
+    <>
+      {loading ? (
+        <PuffLoader
+          color="#cc6633"
+          cssOverride={{
+            display: 'block',
+            margin: '0 auto',
+          }}
+          size={250}
+        />
+      ) : (
+        <ul className={style.list}>
+          {bestsPost?.map(bestPost => (
+            <Post
+              key={bestPost.data.id}
+              bestPost={bestPost}
+              loading={loading}
+            />
+          ))}
+        </ul>
+      )}
+    </>
   );
 };
