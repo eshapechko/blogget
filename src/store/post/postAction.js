@@ -25,7 +25,8 @@ const postDelete = () => ({
   type: POST_DELETE,
 });
 
-export const postRequestAsync = token => dispatch => {
+export const postRequestAsync = () => (dispatch, getState) => {
+  const token = getState().token.token;
   if (!token) {
     dispatch(postDelete());
     return;

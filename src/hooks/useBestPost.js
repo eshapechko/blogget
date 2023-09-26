@@ -9,7 +9,7 @@ export const useBestPost = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(postRequestAsync(token));
+    dispatch(postRequestAsync());
   }, [token]);
 
   return [bestsPost, loading];
