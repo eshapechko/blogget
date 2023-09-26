@@ -52,7 +52,7 @@ export const commentRequestAsync = id => (dispatch, getState) => {
       dispatch(commentRequestSucces([post, comments]));
     })
     .catch(error => {
-      if (error.toString().includes('401')) {
+      if (error.message.toString().includes('401')) {
         alert('Ошибка авторизации, получите токен');
       }
 

@@ -9,10 +9,13 @@ import {useAuth} from '../../../hooks/useAuth';
 import {AuthLoader} from '../../../UI/AuthLoader/AuthLoader';
 import {delToken} from '../../../store/token/tokenAction';
 import {clearComment} from '../../../store/comment/commentAction';
+import {Notification} from '../../Notification/Notification';
 
 export const Auth = () => {
   const [auth, loading, clearAuth] = useAuth();
   const comment = useSelector(state => state.comment.comment);
+  const errorAuth = useSelector(state => state.auth.error);
+  console.log('errorAuth: ', errorAuth);
   const [buttonLogout, setButtonLogout] = useState(false);
 
   const dispatch = useDispatch();
@@ -51,9 +54,12 @@ export const Auth = () => {
           </Text>
         </>
       ) : (
-        <Text className={style.authLink} As="a" href={urlAuth}>
-          <Svg path={LoginIconPath} id="login" className={style.svg} />
-        </Text>
+        <>
+          <Text className={style.authLink} As="a" href={urlAuth}>
+            <Svg path={LoginIconPath} id="login" className={style.svg} />
+          </Text>
+          {errorAuth && <Notification />}
+        </>
       )}
     </div>
   );

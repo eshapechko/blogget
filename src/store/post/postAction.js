@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {URL_API} from '../../api/const';
+import {delToken} from '../token/tokenAction';
 
 export const POST_REQUEST = 'POST_REQUEST';
 export const POST_REQUEST_SUCCES = 'POST_REQUEST_SUCCES';
@@ -24,8 +25,7 @@ const postDelete = () => ({
   type: POST_DELETE,
 });
 
-export const postRequestAsync = () => (dispatch, getState) => {
-  const token = getState().token.token;
+export const postRequestAsync = token => dispatch => {
   if (!token) {
     dispatch(postDelete());
     return;
@@ -43,10 +43,11 @@ export const postRequestAsync = () => (dispatch, getState) => {
       dispatch(postRequestSucces(data));
     })
     .catch(error => {
-      if (error.toString().includes('401')) {
+      if (error.message.toString().includes('401')) {
         alert('Ошибка сервера, зайдите позже');
       }
 
+      dispatch(delToken());
       dispatch(postRequestError(error.toString()));
     });
 };

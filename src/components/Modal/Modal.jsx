@@ -83,7 +83,6 @@ export const Modal = ({id, closeModal}) => {
         )}
       </div>
     </div>,
-
     document.getElementById('modal-root'),
   );
 };

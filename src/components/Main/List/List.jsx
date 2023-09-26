@@ -1,3 +1,4 @@
+import {useSelector} from 'react-redux';
 import {useBestPost} from '../../../hooks/useBestPost';
 import style from './List.module.css';
 import Post from './Post';
@@ -7,6 +8,7 @@ export const List = () => {
   const [bestsPost, loading] = useBestPost();
   console.log('bestsPost: ', bestsPost);
 
+  const authData = useSelector(state => state.auth.data);
   return (
     <>
       {loading ? (
@@ -19,15 +21,17 @@ export const List = () => {
           size={250}
         />
       ) : (
-        <ul className={style.list}>
-          {bestsPost?.map(bestPost => (
-            <Post
-              key={bestPost.data.id}
-              bestPost={bestPost}
-              loading={loading}
-            />
-          ))}
-        </ul>
+        authData.name && (
+          <ul className={style.list}>
+            {bestsPost?.map(bestPost => (
+              <Post
+                key={bestPost.data.id}
+                bestPost={bestPost}
+                loading={loading}
+              />
+            ))}
+          </ul>
+        )
       )}
     </>
   );
