@@ -9,8 +9,11 @@ import {Text} from '../../UI/Text/Text';
 import {Comments} from './Comments/Comments';
 import {FormComment} from './FormComment/FormComment';
 import {AuthLoader} from '../../UI/AuthLoader/AuthLoader';
+import {useNavigate, useParams} from 'react-router-dom';
 
-export const Modal = ({id, closeModal}) => {
+export const Modal = () => {
+  const {id, page} = useParams();
+  const navigate = useNavigate();
   const [commentsPost, status] = useCommentsData(id);
 
   const [post, comments] = commentsPost;
@@ -23,13 +26,13 @@ export const Modal = ({id, closeModal}) => {
     const target = e.target;
 
     if (target === overlayRef.current) {
-      closeModal();
+      navigate(`/category/${page}`);
     }
   };
 
   const handleEscape = e => {
     if (e.key === 'Escape') {
-      closeModal();
+      navigate(`/category/${page}`);
     }
   };
 
@@ -76,7 +79,12 @@ export const Modal = ({id, closeModal}) => {
             <FormComment />
             <Comments comments={comments} />
 
-            <button className={style.close} onClick={closeModal}>
+            <button
+              className={style.close}
+              onClick={() => {
+                navigate(`/category/${page}`);
+              }}
+            >
               <CloseIcon />
             </button>
           </>
@@ -91,6 +99,4 @@ Modal.propTypes = {
   title: PropTypes.string,
   author: PropTypes.string,
   markdown: PropTypes.string,
-  closeModal: PropTypes.func,
-  id: PropTypes.string,
 };

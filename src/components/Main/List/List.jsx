@@ -1,37 +1,84 @@
-import {useSelector} from 'react-redux';
-import {useBestPost} from '../../../hooks/useBestPost';
+import {useDispatch, useSelector} from 'react-redux';
 import style from './List.module.css';
 import Post from './Post';
 import {PuffLoader} from 'react-spinners';
+import {useEffect, useRef} from 'react';
+import {postRequestAsync} from '../../../store/post/postAction';
+import {Outlet, useParams} from 'react-router-dom';
 
 export const List = () => {
-  const [bestsPost, loading] = useBestPost();
-  console.log('bestsPost: ', bestsPost);
-
+  const bestsPost = useSelector(state => state.post.data);
+  const loading = useSelector(state => state.post.loading);
   const authData = useSelector(state => state.auth.data);
+  const {page} = useParams();
+  const dispatch = useDispatch();
+  const authName = useSelector(state => state.auth.data.name);
+  const countPage = useSelector(state => state.post.countPage);
+
+  useEffect(() => {
+    dispatch(postRequestAsync(page));
+  }, [page]);
+
+  const endList = useRef(null);
+
+  useEffect(() => {
+    if (!authName) return;
+
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting) {
+          dispatch(postRequestAsync());
+        }
+      },
+      {
+        rootMargin: '100px',
+      },
+    );
+
+    if (countPage < 3) {
+      observer.observe(endList.current);
+    }
+
+    return () => {
+      if (endList.current) {
+        observer.unobserve(endList.current);
+      }
+    };
+  }, [endList.current, countPage]);
+
+  const handleBtnClick = () => {
+    dispatch(postRequestAsync());
+  };
+
   return (
     <>
-      {loading ? (
-        <PuffLoader
-          color="#cc6633"
-          cssOverride={{
-            display: 'block',
-            margin: '0 auto',
-          }}
-          size={250}
-        />
-      ) : (
-        authData.name && (
+      {authData.name && (
+        <>
           <ul className={style.list}>
-            {bestsPost?.map(bestPost => (
-              <Post
-                key={bestPost.data.id}
-                bestPost={bestPost}
-                loading={loading}
+            {loading ? (
+              <PuffLoader
+                color="#cc6633"
+                cssOverride={{
+                  display: 'block',
+                  margin: '0 auto',
+                }}
+                size={250}
               />
-            ))}
+            ) : (
+              bestsPost?.map(bestPost => (
+                <Post key={bestPost.data.id} bestPost={bestPost} />
+              ))
+            )}
+
+            <li ref={endList} className={style.end} />
           </ul>
-        )
+          {countPage >= 3 && (
+            <button className={style.btn} onClick={handleBtnClick}>
+              Показать ещё
+            </button>
+          )}
+          <Outlet />
+        </>
       )}
     </>
   );

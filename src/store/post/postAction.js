@@ -6,6 +6,8 @@ export const POST_REQUEST = 'POST_REQUEST';
 export const POST_REQUEST_SUCCES = 'POST_REQUEST_SUCCES';
 export const POST_REQUEST_ERROR = 'POST_REQUEST_ERROR';
 export const POST_DELETE = 'POST_DELETE';
+export const POST_REQUEST_SUCCES_AFTER = 'POST_REQUEST_SUCCES_AFTER';
+export const CHANGE_PAGE = 'CHANGE_PAGE';
 
 const postRequest = () => ({
   type: POST_REQUEST,
@@ -13,7 +15,14 @@ const postRequest = () => ({
 
 const postRequestSucces = data => ({
   type: POST_REQUEST_SUCCES,
-  data,
+  data: data.children,
+  after: data.after,
+});
+
+const postRequestSuccesAfter = data => ({
+  type: POST_REQUEST_SUCCES_AFTER,
+  data: data.children,
+  after: data.after,
 });
 
 const postRequestError = error => ({
@@ -25,23 +34,39 @@ const postDelete = () => ({
   type: POST_DELETE,
 });
 
-export const postRequestAsync = () => (dispatch, getState) => {
-  const token = getState().token.token;
-  if (!token) {
-    dispatch(postDelete());
-    return;
+export const changePage = page => ({
+  type: CHANGE_PAGE,
+  page,
+});
+
+export const postRequestAsync = newPage => (dispatch, getState) => {
+  let page = getState().post.page;
+
+  if (newPage) {
+    page = newPage;
+    dispatch(changePage(page));
   }
+
+  const token = getState().token.token;
+  const after = getState().post.after;
+  const loading = getState().post.loading;
+  const isLast = getState().post.isLast;
+
+  if (!token || loading || isLast) return;
 
   dispatch(postRequest());
 
-  axios(`${URL_API}/best`, {
+  axios(`${URL_API}/${page}?limit=10&${after ? `after=${after}` : ''}`, {
     headers: {
       Authorization: `bearer ${token}`,
     },
   })
-    .then(data => {
-      data = data.data.data.children;
-      dispatch(postRequestSucces(data));
+    .then(({data}) => {
+      if (after) {
+        dispatch(postRequestSuccesAfter(data.data));
+      } else {
+        dispatch(postRequestSucces(data.data));
+      }
     })
     .catch(error => {
       if (error.message.toString().includes('401')) {
@@ -50,5 +75,6 @@ export const postRequestAsync = () => (dispatch, getState) => {
 
       dispatch(delToken());
       dispatch(postRequestError(error.toString()));
+      dispatch(postDelete());
     });
 };
