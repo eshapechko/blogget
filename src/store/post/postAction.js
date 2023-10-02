@@ -1,80 +1,42 @@
 import axios from 'axios';
 import {URL_API} from '../../api/const';
 import {delToken} from '../token/tokenAction';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 
-export const POST_REQUEST = 'POST_REQUEST';
-export const POST_REQUEST_SUCCES = 'POST_REQUEST_SUCCES';
-export const POST_REQUEST_ERROR = 'POST_REQUEST_ERROR';
-export const POST_DELETE = 'POST_DELETE';
-export const POST_REQUEST_SUCCES_AFTER = 'POST_REQUEST_SUCCES_AFTER';
-export const CHANGE_PAGE = 'CHANGE_PAGE';
+export const postRequestAsync = createAsyncThunk(
+  'posts/fetch',
+  (newPage, {getState, dispatch}) => {
+    const token = getState().token.token;
+    const after = getState().post.after;
+    const isLast = getState().post.isLast;
+    let page = getState().post.page;
 
-const postRequest = () => ({
-  type: POST_REQUEST,
-});
+    if (newPage) {
+      page = newPage;
+    }
 
-const postRequestSucces = data => ({
-  type: POST_REQUEST_SUCCES,
-  data: data.children,
-  after: data.after,
-});
+    if (!token || isLast) return;
 
-const postRequestSuccesAfter = data => ({
-  type: POST_REQUEST_SUCCES_AFTER,
-  data: data.children,
-  after: data.after,
-});
+    return axios(
+      `${URL_API}/${page}?limit=10&${after ? `after=${after}` : ''}`,
+      {
+        headers: {
+          Authorization: `bearer ${token}`,
+        },
+      },
+    )
+      .then(({data}) => {
+        if (after) {
+          return {data: data.data.children, after: data.data.after};
+        } else {
+          return {data: data.data.children, after: data.data.after};
+        }
+      })
+      .catch(error => {
+        console.log('error: ', error);
+        dispatch(delToken());
 
-const postRequestError = error => ({
-  type: POST_REQUEST_ERROR,
-  error,
-});
-
-const postDelete = () => ({
-  type: POST_DELETE,
-});
-
-export const changePage = page => ({
-  type: CHANGE_PAGE,
-  page,
-});
-
-export const postRequestAsync = newPage => (dispatch, getState) => {
-  let page = getState().post.page;
-
-  if (newPage) {
-    page = newPage;
-    dispatch(changePage(page));
-  }
-
-  const token = getState().token.token;
-  const after = getState().post.after;
-  const loading = getState().post.loading;
-  const isLast = getState().post.isLast;
-
-  if (!token || loading || isLast) return;
-
-  dispatch(postRequest());
-
-  axios(`${URL_API}/${page}?limit=10&${after ? `after=${after}` : ''}`, {
-    headers: {
-      Authorization: `bearer ${token}`,
-    },
-  })
-    .then(({data}) => {
-      if (after) {
-        dispatch(postRequestSuccesAfter(data.data));
-      } else {
-        dispatch(postRequestSucces(data.data));
-      }
-    })
-    .catch(error => {
-      if (error.message.toString().includes('401')) {
-        alert('Ошибка сервера, зайдите позже');
-      }
-
-      dispatch(delToken());
-      dispatch(postRequestError(error.toString()));
-      dispatch(postDelete());
-    });
-};
+        return error.message.toString();
+      });
+  },
+);

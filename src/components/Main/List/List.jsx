@@ -5,21 +5,23 @@ import {PuffLoader} from 'react-spinners';
 import {useEffect, useRef} from 'react';
 import {postRequestAsync} from '../../../store/post/postAction';
 import {Outlet, useParams} from 'react-router-dom';
+import {changePage} from '../../../store/post/postsSlice';
 
 export const List = () => {
-  const bestsPost = useSelector(state => state.post.data);
-  const loading = useSelector(state => state.post.loading);
   const authData = useSelector(state => state.auth.data);
+  const bestsPost = useSelector(state => state.post.data);
+  console.log('bestsPost: ', bestsPost);
+  const loading = useSelector(state => state.post.loading);
   const {page} = useParams();
   const dispatch = useDispatch();
   const authName = useSelector(state => state.auth.data.name);
   const countPage = useSelector(state => state.post.countPage);
+  const endList = useRef(null);
 
   useEffect(() => {
+    dispatch(changePage(page));
     dispatch(postRequestAsync(page));
   }, [page]);
-
-  const endList = useRef(null);
 
   useEffect(() => {
     if (!authName) return;

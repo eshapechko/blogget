@@ -8,8 +8,8 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useAuth} from '../../../hooks/useAuth';
 import {AuthLoader} from '../../../UI/AuthLoader/AuthLoader';
 import {delToken} from '../../../store/token/tokenAction';
-import {clearComment} from '../../../store/comment/commentAction';
 import {Notification} from '../../Notification/Notification';
+import {clearComment} from '../../../store/comment/commentsSlice';
 
 export const Auth = () => {
   const [auth, loading, clearAuth] = useAuth();
