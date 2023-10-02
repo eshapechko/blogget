@@ -2,13 +2,12 @@ import {useRef, useState} from 'react';
 import {Text} from '../../../UI/Text/Text';
 import style from './FormComment.module.css';
 import {useDispatch, useSelector} from 'react-redux';
-import {useAuth} from '../../../hooks/useAuth';
 import {updateComment} from '../../../store/comment/commentsSlice';
 
 export const FormComment = () => {
   const value = useSelector(state => state.comment.updateComment);
   const dispatch = useDispatch();
-  const [auth] = useAuth();
+  const auth = useSelector(state => state.auth.data);
 
   const [viewForm, setViewForm] = useState(true);
   const textRef = useRef(null);

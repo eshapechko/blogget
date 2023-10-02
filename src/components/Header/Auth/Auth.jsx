@@ -10,9 +10,10 @@ import {AuthLoader} from '../../../UI/AuthLoader/AuthLoader';
 import {delToken} from '../../../store/token/tokenAction';
 import {Notification} from '../../Notification/Notification';
 import {clearComment} from '../../../store/comment/commentsSlice';
+import {authLogout} from '../../../store/auth/authAction';
 
 export const Auth = () => {
-  const [auth, loading, clearAuth] = useAuth();
+  const [auth, loading] = useAuth();
   const comment = useSelector(state => state.comment.comment);
   const errorAuth = useSelector(state => state.auth.error);
   const [buttonLogout, setButtonLogout] = useState(false);
@@ -22,7 +23,7 @@ export const Auth = () => {
   const deleteToken = () => {
     dispatch(delToken());
     dispatch(clearComment(comment));
-    clearAuth();
+    dispatch(authLogout());
   };
 
   const handleClick = () => {
