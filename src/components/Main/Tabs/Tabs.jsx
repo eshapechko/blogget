@@ -11,6 +11,8 @@ import {ReactComponent as HotIcon} from './img/hot.svg';
 import {debounceRaf} from '../../../utils/debounce';
 import {Text} from '../../../UI/Text/Text';
 import {useNavigate} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {clearSearch} from '../../../store/search/searchAction';
 
 const LIST = [
   {value: 'Главная', Icon: HomeIcon, link: 'rising'},
@@ -23,7 +25,9 @@ export const Tabs = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isDropdown, setIsDropdown] = useState(true);
   const [itemMenu, setItemMenu] = useState('Главная');
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const token = useSelector(state => state.token.token);
 
   const handleResize = () => {
     if (document.documentElement.clientWidth < 768) {
@@ -41,6 +45,13 @@ export const Tabs = () => {
       window.removeEventListener('resize', debounceResize);
     };
   }, []);
+
+  const tabClick = (value, link) => {
+    if (!token) return;
+    setItemMenu(value);
+    navigate(`/category/${link}`);
+    dispatch(clearSearch());
+  };
 
   return (
     <div className={style.container}>
@@ -64,10 +75,7 @@ export const Tabs = () => {
               <Text
                 As="button"
                 className={style.btn}
-                onClick={() => {
-                  setItemMenu(value);
-                  navigate(`/category/${link}`);
-                }}
+                onClick={() => tabClick(value, link)}
               >
                 {value}
                 {Icon && <Icon width={30} height={30} />}

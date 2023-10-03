@@ -5,7 +5,7 @@ import notphoto from '../img/notphoto.jpg';
 export const PostImage = ({title, thumbnail}) => (
   <img
     className={style.img}
-    src={thumbnail.includes('.jpg') ? thumbnail : notphoto}
+    src={thumbnail?.includes('.jpg') ? thumbnail : notphoto}
     alt={title}
   />
 );

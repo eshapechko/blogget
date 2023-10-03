@@ -6,8 +6,8 @@ import {PostContent} from './PostContent/PostContent';
 import {PostImage} from './PostImage/PostImage';
 import {PostDelete} from './PostDelete/PostDelete';
 
-export const Post = ({bestPost}) => {
-  const {data} = bestPost;
+export const Post = ({postData}) => {
+  const {data} = postData;
   const {title, author, ups, created, thumbnail, id} = data;
 
   return (
@@ -26,5 +26,5 @@ export const Post = ({bestPost}) => {
 };
 
 Post.propTypes = {
-  bestPost: PropTypes.object,
+  postData: PropTypes.object,
 };

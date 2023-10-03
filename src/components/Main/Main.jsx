@@ -16,6 +16,7 @@ export const Main = () => (
         <Route path="/category/:page" element={<List />}>
           <Route path="post/:id" element={<Modal />} />
         </Route>
+        <Route path="/search/:value" element={<List />} />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
     </Layout>
