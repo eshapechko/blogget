@@ -8,7 +8,6 @@ export const getToken = () => {
   if (location.pathname.includes('/auth')) {
     token = new URLSearchParams(location.hash.substring(1)).get('access_token');
     setToken(token);
-    location.href = 'http://localhost:3000';
   }
 
   if (localStorage.getItem('bearer')) {
